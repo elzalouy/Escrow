@@ -17,6 +17,8 @@ export const onSetLoggedUser = (state, action) => {
     company_fax_number: data.company_phone_number,
     company_city: data.company_city,
     company_country: data.company_country,
+    balance:data.balance,
+    work_packages:data.work_packages
   };
 };
 export const onRemoveLoggedUser=(state,action)=>{

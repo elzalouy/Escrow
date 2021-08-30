@@ -4,7 +4,7 @@ import {setItem, getItem, removeItem} from '../utils/StorageHandler';
 const data = [
   {
     _id: 0,
-    role:'User',
+    role: 'User',
     name: 'ezat elzalouy',
     email: 'ezatelzalouy711@gmail.com',
     password: '0.123456',
@@ -23,10 +23,37 @@ const data = [
     company_swift_code: '35h54',
     company_bank_city: 'Cairo',
     company_bank_country: 'Egypt',
+    balance: '750.00',
+    work_packages: [
+      {
+        role: 'supplier',
+        title: 'Aquatics',
+        image: 'aquatics',
+        content: 'Mobile App',
+        amount: '1250.00',
+        deadline: '12-1-2021',
+      },
+      {
+        role: 'supplier',
+        title: 'Mazera',
+        image: 'aquatics',
+        content: 'Mobile App',
+        amount: '7550.00',
+        deadline: '1-1-2022',
+      },
+      {
+        role:'buyer',
+        title:'Froneri',
+        image:'froneri',
+        content:'Mobile App',
+        amount:'2569.00',
+        deadline:'12-29-2021'
+      }
+    ],
   },
   {
     _id: 1,
-    role:'User',
+    role: 'User',
     name: 'Merna Emad',
     email: 'mernawaseif94@gmail.com',
     password: '12345678',
@@ -55,10 +82,10 @@ export async function isLoggedIn() {
   return false;
 }
 
-export function login (email, password) {
+export function login(email, password) {
   //Call Api code intest of this code
   const user = data.find(
-    (item) => item.email === email && item.password === password,
+    item => item.email === email && item.password === password,
   );
   if (user) {
     const token = user._id.toString();
@@ -74,14 +101,14 @@ export async function logout() {
 }
 
 export async function Register(user) {
-  user._id=data.length;
+  user._id = data.length;
   data.push(user);
-  await setItem({key:'x-auth-token',value:data.length.toString()});
+  await setItem({key: 'x-auth-token', value: data.length.toString()});
   return user;
 }
-export async function getUserBytoken(){
-  const token=await getItem('x-auth-token');
-  const user=data.find(item=>item._id.toString()===token);
-  if(user) return user;
+export async function getUserBytoken() {
+  const token = await getItem('x-auth-token');
+  const user = data.find(item => item._id.toString() === token);
+  if (user) return user;
   else return false;
 }

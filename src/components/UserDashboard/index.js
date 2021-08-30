@@ -78,7 +78,6 @@ export default User = () => {
           ),
         }}
       />
-
       <AppStack.Screen
         name="Wallet"
         component={Wallet}

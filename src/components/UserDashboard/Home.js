@@ -62,6 +62,8 @@ const content2 = [
 
 const Home = ({navigation}) => {
   const loggedUser=useSelector(state=>state.App.loggedUser);
+  const supplierPackages=loggedUser.work_packages.filter(item=>item.role==='supplier');
+  const buyerPackages=loggedUser.work_packages.filter(item=>item.role==='buyer');
   return (
     <ScrollView
       style={styles.container}
@@ -93,8 +95,8 @@ const Home = ({navigation}) => {
           }}>
           <View>
             <Text style={styles.txt4}>Available Wallet Ballance</Text>
-            <Text style={styles.txt5}>$1250.00</Text>
-            <Text style={styles.txt1}>All Work Packages*</Text>
+            <Text style={styles.txt5}>{`$${loggedUser.balance}`}</Text>
+            <Text style={styles.txt1}>All Work Packages</Text>
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate('Wallet')}>
@@ -123,8 +125,7 @@ const Home = ({navigation}) => {
           ]}>
           As a Supplier
         </Text>
-
-        {content.map((item, index) => {
+        {supplierPackages.map((item, index) => {
           return (
             <TouchableOpacity
               key={item.title}
@@ -220,7 +221,7 @@ const Home = ({navigation}) => {
           As a Buyer
         </Text>
 
-        {content2.map((item, index) => {
+        {buyerPackages.map((item, index) => {
           return (
             <TouchableOpacity
               key={item.title}

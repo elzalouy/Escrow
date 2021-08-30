@@ -1,4 +1,5 @@
 //App State Managment
+
 const initialState={
     connection:{
         isConnected: true,
@@ -18,6 +19,8 @@ const initialState={
         company_fax_number: '',
         company_city: '',
         company_country: '',
+        balance:'',
+        work_packages:[{role:'',title:'',image:'',content:'',amount:'',deadline:''}]
         }
 }
 export default initialState;
