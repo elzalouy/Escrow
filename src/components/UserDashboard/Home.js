@@ -62,8 +62,8 @@ const content2 = [
 
 const Home = ({navigation}) => {
   const loggedUser=useSelector(state=>state.App.loggedUser);
-  const supplierPackages=loggedUser.work_packages.filter(item=>item.role==='supplier');
-  const buyerPackages=loggedUser.work_packages.filter(item=>item.role==='buyer');
+  const supplierPackages=[]
+  const buyerPackages=[]
   return (
     <ScrollView
       style={styles.container}
@@ -108,7 +108,6 @@ const Home = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-
       <View style={styles.packagesContainer}>
         <Text
           style={[styles.txt4, {marginTop: w * 0.03, marginLeft: w * 0.04}]}>
@@ -121,7 +120,7 @@ const Home = ({navigation}) => {
               fontSize: normalize(11),
               marginTop: w * 0.06,
               marginLeft: w * 0.045,
-            },
+            }
           ]}>
           As a Supplier
         </Text>
@@ -220,7 +219,6 @@ const Home = ({navigation}) => {
           ]}>
           As a Buyer
         </Text>
-
         {buyerPackages.map((item, index) => {
           return (
             <TouchableOpacity
@@ -278,7 +276,6 @@ const Home = ({navigation}) => {
             </TouchableOpacity>
           );
         })}
-
         <LinearGradient
           colors={['#6EB4FF', '#7889FF']}
           style={styles.linearGradient2}

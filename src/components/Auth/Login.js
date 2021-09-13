@@ -15,7 +15,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppActions} from '../../store/AppState';
 import {AuthActions} from '../../store/Auth';
-import {login} from '../../httpService/auth';
+import {isLoggedIn, login} from '../../httpService/auth';
 Icon.loadFont();
 Icon1.loadFont();
 Icon2.loadFont();
@@ -24,20 +24,23 @@ const w = Dimensions.get('window').width;
 const h = Dimensions.get('window').height;
 
 const Login = ({navigation: {navigate}}) => {
+  //store
   const dispatch = useDispatch();
   const {email, password, error} = useSelector(state => state.Auth.login);
-
-  // login
+  
+  // handle login
   const onSubmit = async () => {
     try {
-      let result = login(email, password);
-      if (result.error)
+      // login http request
+      let result = await login(email, password);
+      // if error
+      if (result.error.key)
         return dispatch(
-          AuthActions.onChangeLogin([{element: 'error', value: result.error}]),
+          AuthActions.onChangeLogin([
+            {element: 'error', value: result.error.message},
+          ]),
         );
-      dispatch(
-        AppActions.onChangeAppState([{element: 'isLoggedIn', value: true}]),
-      );
+      // if not error (Get user data, make login input empty, set isLoggedIn and isloading)
       dispatch(AppActions.onSetLoggedUser(result.data));
       dispatch(
         AuthActions.onChangeLogin([
@@ -45,8 +48,15 @@ const Login = ({navigation: {navigate}}) => {
           {element: 'password', value: ''},
         ]),
       );
-    } catch {}
+      dispatch(
+        AppActions.onChangeAppState([
+          {element: 'isLoggedIn', value: true},
+          {element: 'isLoading', value: false},
+        ]),
+      );
+    } catch (err) {}
   };
+
   const onChangeText = (element, value) => {
     dispatch(
       AuthActions.onChangeLogin([
@@ -55,7 +65,6 @@ const Login = ({navigation: {navigate}}) => {
       ]),
     );
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.loginContainer}>

@@ -12,6 +12,8 @@ target 'Escrow' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'EscrowTests' do
     inherit! :complete
     # Pods for testing

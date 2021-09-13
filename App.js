@@ -10,7 +10,6 @@ import Icon2 from 'react-native-vector-icons/Fontisto';
 import Icon3 from 'react-native-vector-icons/Octicons';
 import Icon4 from 'react-native-vector-icons/Entypo';
 
-
 //Stacks
 import Main from './src/components';
 
@@ -19,7 +18,6 @@ Icon1.loadFont();
 Icon2.loadFont();
 Icon3.loadFont();
 Icon4.loadFont();
-
 
 const App = () => {
   return (

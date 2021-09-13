@@ -18,20 +18,13 @@ import {AuthActions} from '../../store/Auth';
 import {validateRegister} from '../../httpService/validate';
 import {Register as httpRegister} from '../../httpService/auth';
 import {AppActions} from '../../store/AppState';
+import Picker from '../Ui/Picker';
+import pick from '../../utils/picker';
 Icon.loadFont();
 Icon1.loadFont();
 Icon2.loadFont();
 
 const w = Dimensions.get('window').width;
-
-const options = {
-  title: 'Select Avatar',
-  customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-};
 
 export default Register = ({navigation}) => {
   const dispatch = useDispatch();
@@ -39,6 +32,7 @@ export default Register = ({navigation}) => {
 
   const onHandleChange = (element, value) => {
     dispatch(AuthActions.onChangeRegister([{element, value}]));
+    dispatch(AuthActions.onChangeRegisterOptions([{element:'error',value:''}]))
   };
 
   const onHandleChangeOptions = async (element, value) => {
@@ -46,6 +40,7 @@ export default Register = ({navigation}) => {
   };
 
   const onSubmit = async () => {
+    // check data validation if it's ok call api, if not display error.
     const result = validateRegister(state.data);
     if (result.error)
       dispatch(
@@ -57,15 +52,25 @@ export default Register = ({navigation}) => {
         ]),
       );
     else {
-      const user = await httpRegister(state.data);
+      const result = await httpRegister(state.data);
+      if(result.error.key) { return dispatch(AuthActions.onChangeRegisterOptions([{element:'error',value:result.error.message}]))}
       dispatch(
-        AppActions.onChangeAppState([{element: 'isLoggedIn', value: true}]),
+        AppActions.onChangeAppState([
+          {element: 'isLoggedIn', value: true},
+          {element: 'isLoading', value: true},
+        ]),
       );
       dispatch(AppActions.onSetLoggedUser(user));
-      console.log(useSelector(state => state.App.loggedUser));
       navigation.navigate('App');
     }
   };
+
+  const onHandleUploadFile = async () => {
+    const res=await pick('pdf','file');
+    dispatch(AuthActions.onChangeRegisterOptions([{element:'file',value:res[0].name}]))
+    dispatch(AuthActions.onChangeRegister([{element:'proof_of_auth',value:res[0]}]));
+  };
+
   return (
     <ScrollView style={{backgroundColor: '#F2F8FF'}}>
       <View style={styles.container}>
@@ -116,13 +121,13 @@ export default Register = ({navigation}) => {
         {state.page == 1 ? (
           <View style={styles.loginContainer}>
             <TextInput
-              placeholder="Name"
+              placeholder="Authorized Contact Name"
               placeholderTextColor="#97ABBF"
               selectionColor="#7a85ff"
               textAlignVertical="bottom"
               style={styles.textInputStyle}
-              value={state.data.name}
-              onChangeText={text => onHandleChange('name', text)}
+              value={state.data.auth_contact_name}
+              onChangeText={text => onHandleChange('auth_contact_name', text)}
             />
             <TextInput
               placeholder="Email"
@@ -150,9 +155,28 @@ export default Register = ({navigation}) => {
               secureTextEntry={true}
               textAlignVertical="bottom"
               style={styles.textInputStyle}
-              value={state.data.confirmpassword}
-              onChangeText={text => onHandleChange('confirmpassword', text)}
+              value={state.data.password_confirmation}
+              onChangeText={text => onHandleChange('password_confirmation', text)}
             />
+                        <TextInput
+              placeholder="Mobile Number"
+              placeholderTextColor="#97ABBF"
+              selectionColor="#7a85ff"
+              textAlignVertical="bottom"
+              style={styles.textInputStyle}
+              value={state.data.mobile_number}
+              onChangeText={text => onHandleChange('mobile_number', text)}
+            />
+            <TextInput
+              placeholder="Telephone Number"
+              placeholderTextColor="#97ABBF"
+              selectionColor="#7a85ff"
+              textAlignVertical="bottom"
+              style={styles.textInputStyle}
+              value={state.data.telephone_number}
+              onChangeText={text => onHandleChange('telephone_number', text)}
+            />
+           <Picker onHandleUploadFile={onHandleUploadFile} fileName={state.file}/>
             <Text style={styles.errorStyle}>{state.error}</Text>
             <View style={styles.buttonContainer}>
               <LinearGradient
@@ -184,7 +208,7 @@ export default Register = ({navigation}) => {
         ) : (
           <View style={styles.loginContainer}>
             <TextInput
-              placeholder="Company Name"
+              placeholder="Company Name (optional)"
               placeholderTextColor="#97ABBF"
               selectionColor="#7a85ff"
               textAlignVertical="bottom"
@@ -193,34 +217,7 @@ export default Register = ({navigation}) => {
               onChangeText={text => onHandleChange('company_name', text)}
             />
             <TextInput
-              placeholder="Authorized Contact Name"
-              placeholderTextColor="#97ABBF"
-              selectionColor="#7a85ff"
-              textAlignVertical="bottom"
-              style={styles.textInputStyle}
-              value={state.data.auth_contact_name}
-              onChangeText={text => onHandleChange('auth_contact_name', text)}
-            />
-            <TextInput
-              placeholder="Mobile Number"
-              placeholderTextColor="#97ABBF"
-              selectionColor="#7a85ff"
-              textAlignVertical="bottom"
-              style={styles.textInputStyle}
-              value={state.data.company_mobile}
-              onChangeText={text => onHandleChange('company_mobile', text)}
-            />
-            <TextInput
-              placeholder="Telephone Number"
-              placeholderTextColor="#97ABBF"
-              selectionColor="#7a85ff"
-              textAlignVertical="bottom"
-              style={styles.textInputStyle}
-              value={state.data.company_telephone}
-              onChangeText={text => onHandleChange('company_telephone', text)}
-            />
-            <TextInput
-              placeholder="Fax Number"
+              placeholder="Fax Number (optional)"
               placeholderTextColor="#97ABBF"
               selectionColor="#7a85ff"
               textAlignVertical="bottom"
@@ -229,7 +226,7 @@ export default Register = ({navigation}) => {
               onChangeText={text => onHandleChange('company_fax', text)}
             />
             <TextInput
-              placeholder="Bank Account Number"
+              placeholder="Bank Account Number (optional)"
               placeholderTextColor="#97ABBF"
               selectionColor="#7a85ff"
               textAlignVertical="bottom"
@@ -245,7 +242,6 @@ export default Register = ({navigation}) => {
               onPress={() => navigation.navigate('Fees')}>
               <Text style={styles.txt}>Fees and TC</Text>
             </TouchableOpacity>
-
             <View style={styles.buttonContainer}>
               <LinearGradient
                 colors={['#6EB4FF', '#7889FF']}
@@ -255,6 +251,7 @@ export default Register = ({navigation}) => {
                   height: w * 0.13,
                   width: w * 0.7,
                   marginTop: w * 0.08,
+                  marginBottom:w*0.08
                 }}
                 start={{x: 0.7, y: 0}}>
                 <TouchableOpacity
@@ -391,4 +388,25 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     color: '#002364',
   },
+  inputFileStyle: {
+    color: '#97ABBF',
+    textAlignVertical: 'bottom',
+    paddingLeft: 5,
+    height: 60,
+    width: w - 100,
+    backgroundColor: '#f1f8ff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#7889FF',
+    paddingTop: 25,
+    paddingLeft: 5,
+    flexDirection:'row'
+  },
+  inputFileTextStyle: {
+    color: '#97ABBF',
+  },
+  inputFileIconStyle:{
+    color:"#7889FF",
+    fontSize:22,
+    end:-120
+  }
 });

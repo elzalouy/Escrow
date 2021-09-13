@@ -8,19 +8,25 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { AuthActions } from '../../store/Auth'
+import {useDispatch, useSelector} from 'react-redux';
+import {forgetPassword} from '../../httpService/auth';
+import {AuthActions} from '../../store/Auth';
 import normalize from '../../utils/normalize';
 
 const w = Dimensions.get('window').width;
 const h = Dimensions.get('window').height;
 
-const ForgetPassword = ({ navigation }) => {
+const ForgetPassword = ({navigation}) => {
   const dispatch = useDispatch();
-  const { email } = useSelector(state => state.Auth.forgetPassword);
+  const {email} = useSelector(state => state.Auth.forgetPassword);
   const handleChange = (element, value) => {
-    dispatch(AuthActions.onChangeForgetPassword([{ element, value }]));
-  }
+    dispatch(AuthActions.onChangeForgetPassword([{element, value}]));
+  };
+  const onHandleSubmit = async () => {
+    const result = await forgetPassword(email);
+    if (result.error.key) alert(result.error);
+    else navigation.navigate('ForgetPasswordCode');
+  };
   return (
     <React.Fragment>
       <View style={styles.container}>
@@ -44,12 +50,10 @@ const ForgetPassword = ({ navigation }) => {
               height: w * 0.13,
               width: w * 0.7,
             }}
-            start={{ x: 0.7, y: 0 }}>
+            start={{x: 0.7, y: 0}}>
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() => {
-                navigation.navigate('ForgetPasswordCode');
-              }}>
+              onPress={() => onHandleSubmit()}>
               <Text
                 style={{
                   color: '#fff',

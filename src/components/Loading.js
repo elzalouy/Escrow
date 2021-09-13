@@ -1,7 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
 import {getUserBytoken, isLoggedIn as isToken} from '../httpService/auth';
 import {AppActions} from '../store/AppState';
 const Loading = ({navigation}) => {
