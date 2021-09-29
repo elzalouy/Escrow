@@ -1,17 +1,17 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { StatusBar, Dimensions, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {StatusBar, Dimensions, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import LoadingScreen from './Loading';
 import Auth from './Auth';
 import RoleStack from './RoleStack';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 const RootStack = createStackNavigator();
 const h = Dimensions.get('window').height;
 const w = Dimensions.get('window').width;
 
 export default Main = () => {
-  const { isLoggedIn, isLoading } = useSelector((state) => state.App.connection);
+  const {isLoggedIn, isLoading} = useSelector(state => state.App.connection);
   return (
     <React.Fragment>
       <NavigationContainer>
@@ -25,13 +25,11 @@ export default Main = () => {
           {isLoading && (
             <RootStack.Screen name="Loading" component={LoadingScreen} />
           )}
-          <React.Fragment>
-            {isLoggedIn ? (
-              <RootStack.Screen name="App" component={RoleStack} />
-            ) : (
-              <RootStack.Screen name="Auth" component={Auth} />
-            )}
-          </React.Fragment>
+          {isLoggedIn ? (
+            <RootStack.Screen name="App" component={RoleStack} />
+          ) : (
+            <RootStack.Screen name="Auth" component={Auth} />
+          )}
         </RootStack.Navigator>
       </NavigationContainer>
       <StatusBar backgroundColor="grey" />

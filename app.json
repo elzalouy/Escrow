@@ -1,4 +1,6 @@
 {
   "name": "Escrow",
-  "displayName": "Escrow"
+  "displayName": "Escrow",
+  "API_URL":"http://68.183.30.130/escrowbchainbackend/public/api/",
+  "GQL_API_URL":"http://68.183.30.130/escrowbchainbackend/public/graphql"
 }

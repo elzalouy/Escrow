@@ -12,7 +12,7 @@ const initialState = {
       password_confirmation: '',
       proof_of_auth:'',
       mobile_number: '',
-      telephone_number: '',
+      telephone_number: '', 
       company_name: '',
       company_fax_number: '',
       company_account_number: '',
@@ -26,9 +26,13 @@ const initialState = {
   },
   forgetPassword: {
     email: '',
+    error:''
   },
   forgetPasswordCode: {
     code: '',
+    newPassword:'',
+    confirmPassword:'',
+    error:''
   },
 };
 export default initialState;

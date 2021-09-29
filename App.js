@@ -12,12 +12,12 @@ import Icon4 from 'react-native-vector-icons/Entypo';
 
 //Stacks
 import Main from './src/components';
-
 Icon.loadFont();
 Icon1.loadFont();
 Icon2.loadFont();
 Icon3.loadFont();
 Icon4.loadFont();
+
 
 const App = () => {
   return (

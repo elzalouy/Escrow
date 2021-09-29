@@ -15,7 +15,8 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppActions} from '../../store/AppState';
 import {AuthActions} from '../../store/Auth';
-import {isLoggedIn, login} from '../../httpService/auth';
+import { login as httpLogin} from '../../httpService/auth';
+import _try from '../../middleware/try';
 Icon.loadFont();
 Icon1.loadFont();
 Icon2.loadFont();
@@ -27,21 +28,18 @@ const Login = ({navigation: {navigate}}) => {
   //store
   const dispatch = useDispatch();
   const {email, password, error} = useSelector(state => state.Auth.login);
-  
+
   // handle login
-  const onSubmit = async () => {
-    try {
-      // login http request
-      let result = await login(email, password);
-      // if error
-      if (result.error.key)
-        return dispatch(
-          AuthActions.onChangeLogin([
-            {element: 'error', value: result.error.message},
-          ]),
-        );
-      // if not error (Get user data, make login input empty, set isLoggedIn and isloading)
-      dispatch(AppActions.onSetLoggedUser(result.data));
+  const onSubmit = _try(async () => {
+    // login http request
+    let result = await httpLogin(email, password);
+    if (result.error)
+      return dispatch(
+        AuthActions.onChangeLogin([
+          {element: 'error', value: result.error.message},
+        ]),
+      );
+    if (result.data) {
       dispatch(
         AuthActions.onChangeLogin([
           {element: 'email', value: ''},
@@ -54,8 +52,9 @@ const Login = ({navigation: {navigate}}) => {
           {element: 'isLoading', value: false},
         ]),
       );
-    } catch (err) {}
-  };
+      navigate('Loading');
+    }
+  });
 
   const onChangeText = (element, value) => {
     dispatch(

@@ -1,6 +1,6 @@
 module.exports=function(fun) {
     try {
-         fun();
+         return fun;
     } catch (error) {
         console.log(error);
         alert(error);

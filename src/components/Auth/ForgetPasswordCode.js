@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -9,18 +9,35 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { AuthActions } from '../../store/Auth';
+import {useDispatch, useSelector} from 'react-redux';
+import {AuthActions} from '../../store/Auth';
 import normalize from '../../utils/normalize';
-
+import {ForgetPasswordCode as httpResetPassword} from '../../httpService/auth';
 const w = Dimensions.get('screen').width;
 
-export default ForgetPasswordCode = () => {
-    const dispatch=useDispatch();
-    const {code}=useSelector(state=>state.Auth.forgetPasswordCode);
-    const onHandleChange=(element,value)=>{
-        dispatch(AuthActions.onChangeForgetPasswordCode([{element,value}]));
-    }
+export default ForgetPasswordCode = ({navigation}) => {
+  const dispatch = useDispatch();
+  const {code, newPassword, confirmPassword,error} = useSelector(
+    state => state.Auth.forgetPasswordCode,
+  );
+  const onHandleChange = (element, value) => {
+    dispatch(AuthActions.onChangeForgetPasswordCode([{element, value}]));
+  };
+  const onSubmit = async () => {
+    const result = await httpResetPassword({
+      code,
+      newPassword,
+      confirmPassword,
+    });
+
+    if (result.error)
+      return dispatch(
+        AuthActions.onChangeForgetPasswordCode([
+          {element: 'error', value: result.error.message},
+        ]),
+      );
+    else navigation.navigate("Login");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.loginContainer}>
@@ -31,15 +48,34 @@ export default ForgetPasswordCode = () => {
           textAlignVertical="bottom"
           style={styles.textInputStyle}
           value={code}
-          onChangeText={text=>onHandleChange('code',text)}
+          onChangeText={text => onHandleChange('code', text)}
+        />
+        <TextInput
+          placeholder="Your new Password"
+          placeholderTextColor="#97ABBF"
+          selectionColor="#7a85ff"
+          textAlignVertical="bottom"
+          style={styles.textInputStyle}
+          value={newPassword}
+          onChangeText={text => onHandleChange('newPassword', text)}
+        />
+        <TextInput
+          placeholder="Confirm your password"
+          placeholderTextColor="#97ABBF"
+          selectionColor="#7a85ff"
+          textAlignVertical="bottom"
+          style={styles.textInputStyle}
+          value={confirmPassword}
+          onChangeText={text => onHandleChange('confirmPassword', text)}
         />
         <View style={{flexDirection: 'row', marginTop: w * 0.02}}>
-          <Text style={styles.textStyle}>Didn't get an email yet?</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ForgetPassword')}>
             <Text style={styles.blueTextStyle}> Resend</Text>
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={styles.errorText}>{error}</Text>
       <View style={styles.buttonContainer}>
         <LinearGradient
           colors={['#6EB4FF', '#7889FF']}
@@ -52,9 +88,7 @@ export default ForgetPasswordCode = () => {
           start={{x: 0.7, y: 0}}>
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => {
-              this.props.navigation.navigate('Login');
-            }}>
+            onPress={() => onSubmit()}>
             <Text
               style={{
                 color: '#fff',
@@ -67,13 +101,14 @@ export default ForgetPasswordCode = () => {
           </TouchableOpacity>
         </LinearGradient>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Register')}>
+          onPress={() => navigation.navigate('Register')}>
           <Text
             style={{
               paddingTop: 30,
               textAlign: 'center',
               color: '#7a85ff',
               fontSize: 15,
+              fontWeight: '600',
             }}>
             {' '}
             Create Account
@@ -94,6 +129,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     // justifyContent:'center',
     alignSelf: 'center',
+    marginTop: w * 0.3,
   },
   textInputStyle: {
     alignSelf: 'center',
@@ -103,7 +139,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#7889FF',
     color: 'black',
-    marginTop: w * 0.3,
   },
   textStyle: {
     color: '#9DA2C9',
@@ -131,4 +166,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
   },
+  errorText:{
+    textAlign:'center',
+    color:'red'
+  }
 });

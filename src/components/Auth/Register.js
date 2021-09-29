@@ -32,7 +32,9 @@ export default Register = ({navigation}) => {
 
   const onHandleChange = (element, value) => {
     dispatch(AuthActions.onChangeRegister([{element, value}]));
-    dispatch(AuthActions.onChangeRegisterOptions([{element:'error',value:''}]))
+    dispatch(
+      AuthActions.onChangeRegisterOptions([{element: 'error', value: ''}]),
+    );
   };
 
   const onHandleChangeOptions = async (element, value) => {
@@ -53,22 +55,33 @@ export default Register = ({navigation}) => {
       );
     else {
       const result = await httpRegister(state.data);
-      if(result.error.key) { return dispatch(AuthActions.onChangeRegisterOptions([{element:'error',value:result.error.message}]))}
-      dispatch(
-        AppActions.onChangeAppState([
-          {element: 'isLoggedIn', value: true},
-          {element: 'isLoading', value: true},
-        ]),
-      );
-      dispatch(AppActions.onSetLoggedUser(user));
+      if (result.error)
+        return dispatch(
+          AuthActions.onChangeRegisterOptions([
+            {element: 'error', value: result.error.message},
+          ]),
+        );
+       dispatch(
+          AppActions.onChangeAppState([
+            {element: 'isLoggedIn', value: true},
+            {element: 'isLoading', value: true},
+          ]),
+        );
+      dispatch(AppActions.onSetLoggedUser(result.data));
       navigation.navigate('App');
     }
   };
 
   const onHandleUploadFile = async () => {
-    const res=await pick('pdf','file');
-    dispatch(AuthActions.onChangeRegisterOptions([{element:'file',value:res[0].name}]))
-    dispatch(AuthActions.onChangeRegister([{element:'proof_of_auth',value:res[0]}]));
+    const res = await pick('pdf', 'file');
+    dispatch(
+      AuthActions.onChangeRegisterOptions([
+        {element: 'file', value: res[0].name},
+      ]),
+    );
+    dispatch(
+      AuthActions.onChangeRegister([{element: 'proof_of_auth', value: res[0]}]),
+    );
   };
 
   return (
@@ -156,9 +169,11 @@ export default Register = ({navigation}) => {
               textAlignVertical="bottom"
               style={styles.textInputStyle}
               value={state.data.password_confirmation}
-              onChangeText={text => onHandleChange('password_confirmation', text)}
+              onChangeText={text =>
+                onHandleChange('password_confirmation', text)
+              }
             />
-                        <TextInput
+            <TextInput
               placeholder="Mobile Number"
               placeholderTextColor="#97ABBF"
               selectionColor="#7a85ff"
@@ -176,7 +191,10 @@ export default Register = ({navigation}) => {
               value={state.data.telephone_number}
               onChangeText={text => onHandleChange('telephone_number', text)}
             />
-           <Picker onHandleUploadFile={onHandleUploadFile} fileName={state.file}/>
+            <Picker
+              onHandleUploadFile={onHandleUploadFile}
+              fileName={state.file}
+            />
             <Text style={styles.errorStyle}>{state.error}</Text>
             <View style={styles.buttonContainer}>
               <LinearGradient
@@ -251,7 +269,7 @@ export default Register = ({navigation}) => {
                   height: w * 0.13,
                   width: w * 0.7,
                   marginTop: w * 0.08,
-                  marginBottom:w*0.08
+                  marginBottom: w * 0.08,
                 }}
                 start={{x: 0.7, y: 0}}>
                 <TouchableOpacity
@@ -399,14 +417,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#7889FF',
     paddingTop: 25,
     paddingLeft: 5,
-    flexDirection:'row'
+    flexDirection: 'row',
   },
   inputFileTextStyle: {
     color: '#97ABBF',
   },
-  inputFileIconStyle:{
-    color:"#7889FF",
-    fontSize:22,
-    end:-120
-  }
+  inputFileIconStyle: {
+    color: '#7889FF',
+    fontSize: 22,
+    end: -120,
+  },
 });

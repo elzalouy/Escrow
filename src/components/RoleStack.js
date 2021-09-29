@@ -8,11 +8,10 @@ const UserRoleStack = createStackNavigator();
 
 export default RoleStack = () => {
     return (
-      <UserRoleStack.Navigator initialRouteName="User" headerMode="none">
+      <UserRoleStack.Navigator initialRouteName="User" screenOptions={{headerShown:false}}>
         <UserRoleStack.Screen name="User" component={User} />
         {/* <UserRoleStack.Screen name="Bank" component={Bank} /> */}
-        <UserRoleStack.Screen name="Arbitrator" component={Arbitrator} />
+        {/* <UserRoleStack.Screen name="Arbitrator" component={Arbitrator} /> */}
       </UserRoleStack.Navigator>
     );
   };
-  

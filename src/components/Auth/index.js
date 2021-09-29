@@ -6,7 +6,7 @@ import ForgetPassword from './ForgetPassword';
 import ForgetPasswordCode from './ForgetPasswordCode';
 import normalize from '../../utils/normalize';
 
-import { Image, TouchableOpacity, View, Dimensions } from 'react-native';
+import {Image, TouchableOpacity, View, Dimensions} from 'react-native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -34,8 +34,8 @@ export default Auth = () => {
                 console.log('hi');
               }}>
               <Image
-                source={{ uri: 'more' }}
-                style={{ width: w * 0.06, height: w * 0.06 }}
+                source={{uri: 'more'}}
+                style={{width: w * 0.06, height: w * 0.06}}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -69,8 +69,7 @@ export default Auth = () => {
                   height: w * 0.08,
                   justifyContent: 'center',
                   alignItems: 'center',
-                }}
-              ></View>
+                }}></View>
             ),
           }}
         />
@@ -78,61 +77,66 @@ export default Auth = () => {
           name="Register"
           component={Register}
           gestureEnabled={false}
-          options={{ title: 'Sign Up' ,
-          headerLeft: () => (
-            <View
-              style={{
-                width: w * 0.2,
-                height: w * 0.08,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            ></View>
-          )}}
+          options={{
+            title: 'Sign Up',
+            headerLeft: () => (
+              <View
+                style={{
+                  width: w * 0.2,
+                  height: w * 0.08,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
+            ),
+          }}
         />
         <AuthStack.Screen
           name="Fees"
           component={Fees}
-          options={{ title: 'Fees' ,
-          headerLeft: () => (
-            <View
-              style={{
-                width: w * 0.2,
-                height: w * 0.08,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            ></View>)
-        }}
+          options={{
+            title: 'Fees',
+            headerLeft: () => (
+              <View
+                style={{
+                  width: w * 0.2,
+                  height: w * 0.08,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
+            ),
+          }}
         />
         <AuthStack.Screen
           name="ForgetPassword"
           component={ForgetPassword}
-          options={{ title: 'Forget Password',
-          headerLeft: () => (
-            <View
-              style={{
-                width: w * 0.2,
-                height: w * 0.08,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            ></View>)
-        }}
+          options={{
+            title: 'Forget Password',
+            headerLeft: () => (
+              <View
+                style={{
+                  width: w * 0.05,
+                  height: w * 0.08,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
+            ),
+          }}
         />
         <AuthStack.Screen
           name="ForgetPasswordCode"
           component={ForgetPasswordCode}
-          options={{ title: 'Forget Password Code',
-          headerLeft: () => (
-            <View
-              style={{
-                width: w * 0.2,
-                height: w * 0.08,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            ></View>) }}
+          options={{
+            title: 'Forget Password Code',
+            headerLeft: () => (
+              <View
+                style={{
+                  width: w * 0.2,
+                  height: w * 0.08,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
+            ),
+          }}
         />
       </AuthStack.Navigator>
     </React.Fragment>

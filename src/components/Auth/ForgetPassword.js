@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-import {forgetPassword} from '../../httpService/auth';
+import {forgetPassword as httpForgetPassword} from '../../httpService/auth';
+import _try from '../../middleware/try';
 import {AuthActions} from '../../store/Auth';
 import normalize from '../../utils/normalize';
 
@@ -18,15 +19,30 @@ const h = Dimensions.get('window').height;
 
 const ForgetPassword = ({navigation}) => {
   const dispatch = useDispatch();
-  const {email} = useSelector(state => state.Auth.forgetPassword);
-  const handleChange = (element, value) => {
-    dispatch(AuthActions.onChangeForgetPassword([{element, value}]));
-  };
-  const onHandleSubmit = async () => {
-    const result = await forgetPassword(email);
-    if (result.error.key) alert(result.error);
-    else navigation.navigate('ForgetPasswordCode');
-  };
+  const {email, error} = useSelector(state => state.Auth.forgetPassword);
+  const onhandleChange = _try((element, value) => {
+    dispatch(
+      AuthActions.onChangeForgetPassword([
+        {element, value},
+        {element: 'error', value: ''},
+      ]),
+    );
+  });
+
+  const onHandleSubmit = _try(async () => {
+    const result = await httpForgetPassword(email);
+    if (result.data) {
+      navigation.navigate('ForgetPasswordCode');
+    }
+    if (result.error) {
+      dispatch(
+        AuthActions.onChangeForgetPassword([
+          {element: 'error', value: result.error.message},
+        ]),
+      );
+    }
+  });
+
   return (
     <React.Fragment>
       <View style={styles.container}>
@@ -38,8 +54,9 @@ const ForgetPassword = ({navigation}) => {
             textAlignVertical="bottom"
             style={styles.textInputStyle}
             value={email}
-            onChangeText={text => handleChange('email', text)}
+            onChangeText={text => onhandleChange('email', text)}
           />
+          <Text style={styles.errorStyle}> {error} </Text>
         </View>
         <View style={styles.buttonContainer}>
           <LinearGradient
@@ -113,6 +130,12 @@ const styles = StyleSheet.create({
     width: w * 0.7,
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  errorStyle: {
+    color: 'red',
+    fontSize: normalize(11),
+    marginTop: w * 0.05,
+    alignSelf: 'center',
   },
 });
 
