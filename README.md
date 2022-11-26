@@ -9,8 +9,7 @@ and protected smart contract. The next step is for the buyer to deposit the cont
 into an escrow account and the Work Package is activated. Once the product or service
 is delivered, and the buyer accepts, money is automatically transferred to the supplier.
 ### Responsibility
-I was responsible for maintaining, refactoring, and Developing the last version of the application to be suitable for the business needs.
-The application is under development for now.
+I was responsible for maintaining, refactoring, and Developing the last version of the application to be suitable for the business needs. I take the design from another developer and kept going in developing.
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com/) to install EscrowBchain.
